@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple EHR on Azure</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef4f8;
+  padding: 24px;
+  color: #203447;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 15px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 11px 18px;
+  background: #146b83;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccd7df;
+  padding: 10px;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+th {
+  background: #e7f2f6;
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<h1>Electronic Health Record</h1>
+<p>Azure EHR demonstration. Use fictional patient data only.</p>
+
+<h2>Patient Entry Form</h2>
+
+<form id="patientForm">
+
+<label>Patient ID</label>
+<input id="patientId" required maxlength="30">
+
+<label>Patient Name</label>
+<input id="patientName" required maxlength="100">
+
+<label>Age</label>
+<input id="age" type="number" min="0" max="120"
+step="1" required>
+
+<label>Clinical Notes</label>
+<textarea id="notes" required maxlength="500"></textarea>
+
+<button type="submit">Add Patient Record</button>
+</form>
+
+<p id="message"></p>
+
+<h2>Patient Records</h2>
+
+<table>
+<thead>
+<tr>
+<th>Patient ID</th>
+<th>Name</th>
+<th>Age</th>
+<th>Clinical Notes</th>
+</tr>
+</thead>
+<tbody id="records"></tbody>
+</table>
+
+</main>
+
+<script>
+const form = document.getElementById("patientForm");
+const records = document.getElementById("records");
+const message = document.getElementById("message");
+
+// Load saved records from browser storage
+let patientRecords =
+JSON.parse(localStorage.getItem("ehrRecords")) || [];
+
+// Display records
+function displayRecords() {
+
+  records.innerHTML = "";
+
+  patientRecords.forEach(function(patient) {
+
+    const row = document.createElement("tr");
+
+    [patient.id, patient.name,
+     patient.age, patient.notes].forEach(function(value) {
+
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+
+    });
+
+    records.appendChild(row);
+
+  });
+}
+
+// Add new patient
+form.addEventListener("submit", function(event) {
+
+  event.preventDefault();
+
+  const patient = {
+    id: document.getElementById("patientId").value.trim(),
+    name: document.getElementById("patientName").value.trim(),
+    age: document.getElementById("age").value,
+    notes: document.getElementById("notes").value.trim()
+  };
+
+  if (!patient.id || !patient.name ||
+      !patient.age || !patient.notes) {
+
+    message.textContent = "Please complete every field.";
+    return;
+  }
+
+  patientRecords.push(patient);
+
+  // Save records in localStorage
+  localStorage.setItem(
+    "ehrRecords",
+    JSON.stringify(patientRecords)
+  );
+
+  displayRecords();
+
+  message.textContent = "Patient record added successfully.";
+
+  form.reset();
+
+});
+
+// Show saved records when page opens
+displayRecords();
+
+</script>
+</body>
+</html>
