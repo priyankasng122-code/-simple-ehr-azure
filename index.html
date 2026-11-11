@@ -153,6 +153,46 @@ form.addEventListener("submit", function(event) {
     return;
   }
 
+
+// ASSIGNMENT 3: INPUT VALIDATION
+
+// Clean up input values
+patient.name = patient.name.trim();
+patient.id = patient.id.trim();
+patient.notes = patient.notes.trim();
+
+const ageValue = String(patient.age).trim();
+
+// Validate patient name
+if (patient.name === "") {
+    message.textContent = "Error: Patient name cannot be empty!";
+    return;
+}
+
+// Validate patient ID
+if (patient.id === "" || /\s/.test(patient.id)) {
+    message.textContent = "Error: Enter a valid Patient ID without spaces!";
+    return;
+}
+
+// Validate age
+if (
+    ageValue === "" ||
+    !/^\d+$/.test(ageValue) ||
+    Number(ageValue) < 0 ||
+    Number(ageValue) > 120
+) {
+    message.textContent = "Error: Age must be a whole number between 0 and 120!";
+    return;
+}
+
+// Validate notes
+if (patient.notes === "") {
+    message.textContent = "Error: Notes cannot be empty!";
+    return;
+}
+
+  
 // Check whether patient ID already exists
 const normalizedId = patient.id.toUpperCase();
 
