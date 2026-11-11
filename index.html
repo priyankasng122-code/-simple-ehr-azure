@@ -144,6 +144,7 @@ form.addEventListener("submit", function(event) {
     age: document.getElementById("age").value,
     notes: document.getElementById("notes").value.trim()
   };
+  
 
   if (!patient.id || !patient.name ||
       !patient.age || !patient.notes) {
@@ -152,9 +153,20 @@ form.addEventListener("submit", function(event) {
     return;
   }
 
+// Check whether patient ID already exists
+const normalizedId = patient.id.toUpperCase();
+
+const duplicate = patientRecords.some(function(existingPatient) {
+  return existingPatient.id.trim().toUpperCase() === normalizedId;
+});
+
+if (duplicate) {
+  message.textContent = "Error: Patient ID already exists!";
+  return;
+}
+
   patientRecords.push(patient);
 
-  // Save records in localStorage
   localStorage.setItem(
     "ehrRecords",
     JSON.stringify(patientRecords)
