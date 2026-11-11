@@ -146,8 +146,12 @@ form.addEventListener("submit", function(event) {
   };
   
 
-  if (!patient.id || !patient.name ||
-      !patient.age || !patient.notes) {
+  if (
+     !patient.id.trim() ||
+      !patient.name.trim() ||
+      String(patient.age).trim() ===""||
+      !patient.notes.trim() 
+  ) {
 
     message.textContent = "Please complete every field.";
     return;
