@@ -146,29 +146,20 @@ form.addEventListener("submit", function(event) {
   };
   
 
-
 // ASSIGNMENT 3: INPUT VALIDATION
-
-// Clean up input values
-patient.name = patient.name.trim();
-patient.id = patient.id.trim();
-patient.notes = patient.notes.trim();
 
 const ageValue = String(patient.age).trim();
 
-// Validate patient name
 if (patient.name === "") {
     message.textContent = "Error: Patient name cannot be empty!";
     return;
 }
 
-// Validate patient ID
 if (patient.id === "" || /\s/.test(patient.id)) {
     message.textContent = "Error: Enter a valid Patient ID without spaces!";
     return;
 }
 
-// Validate age
 if (
     ageValue === "" ||
     !/^\d+$/.test(ageValue) ||
@@ -179,38 +170,36 @@ if (
     return;
 }
 
-// Validate notes
 if (patient.notes === "") {
     message.textContent = "Error: Notes cannot be empty!";
     return;
 }
 
-  
-// Check whether patient ID already exists
+// DUPLICATE PATIENT ID CHECK
 const normalizedId = patient.id.toUpperCase();
 
 const duplicate = patientRecords.some(function(existingPatient) {
-  return existingPatient.id.trim().toUpperCase() === normalizedId;
+    return existingPatient.id.trim().toUpperCase() === normalizedId;
 });
 
 if (duplicate) {
-  message.textContent = "Error: Patient ID already exists!";
-  return;
+    message.textContent = "Error: Patient ID already exists!";
+    return;
 }
-  patientRecords.push(patient);
 
-  localStorage.setItem(
-    "ehrRecords",
-    JSON.stringify(patientRecords)
-  );
+// SAVE PATIENT
+patientRecords.push(patient);
 
-  displayRecords();
+localStorage.setItem("ehrRecords", JSON.stringify(patientRecords));
 
-  message.textContent = "Patient record added successfully.";
+displayRecords();
 
-  form.reset();
+message.textContent = "Patient record added successfully.";
+
+form.reset();
 
 });
+
 
 // Show saved records when page opens
 displayRecords();
