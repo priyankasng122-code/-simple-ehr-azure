@@ -123,7 +123,7 @@ function displayRecords() {
      patient.age, patient.notes].forEach(function(value) {
 
       const cell = document.createElement("td");
-      cell.textContent = value;
+      cell.innerHTML = value;
       row.appendChild(cell);
 
     });
